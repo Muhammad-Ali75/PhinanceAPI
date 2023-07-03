@@ -5,9 +5,11 @@ const dbConnect = require("./src/middleware/dbConnect");
 
 dbConnect();
 const app = express();
+app.use(cors());
 
 app.use(express.json());
-app.use(cors());
+
+//Routes
 app.use("/api/user", user);
 
 app.listen(process.env.PORT, () => {

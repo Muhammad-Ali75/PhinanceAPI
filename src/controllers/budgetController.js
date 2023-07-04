@@ -26,7 +26,7 @@ async function getBudgetById(req, res) {
 }
 
 async function createBudget(req, res) {
-  const { title, budgetedAmount } = req.body;
+  const { title, budgetedAmount, color } = req.body;
 
   let emptyFields = [];
 
@@ -45,7 +45,12 @@ async function createBudget(req, res) {
   // add doc to db
   try {
     const userId = req.user._id;
-    const budget = await Budget.create({ title, budgetedAmount, userId });
+    const budget = await Budget.create({
+      title,
+      budgetedAmount,
+      color,
+      userId,
+    });
     res.status(200).json(budget);
   } catch (error) {
     res.status(400).json({ error: error.message });

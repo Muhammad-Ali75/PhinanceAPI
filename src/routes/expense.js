@@ -1,5 +1,10 @@
 const express = require("express");
-// const { signUp, logIn } = require("../controllers/userController");
+const {
+  getAll,
+  getAllByBudget,
+  createExpense,
+  deleteExpense,
+} = require("../controllers/expenseController");
 const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
@@ -8,18 +13,15 @@ const router = express.Router();
 router.use(requireAuth);
 
 //get All expenses
-router.get("/", (req, res) => {
-  res.json({ msg: "ALL Expense" });
-});
+router.get("/", getAll);
+
+//get All expenses by budgetID
+router.get("/:id", getAllByBudget);
 
 // Create an expense
-router.post("/create", (req, res) => {
-  res.json({ msg: `Create Expense ` });
-});
+router.post("/create", createExpense);
 
 //Delete an expense
-router.delete("/:id", (req, res) => {
-  res.json({ msg: `Expense ${req.params.id} deleted` });
-});
+router.delete("/:id", deleteExpense);
 
 module.exports = router;

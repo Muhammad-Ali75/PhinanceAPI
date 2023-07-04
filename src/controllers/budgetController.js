@@ -11,12 +11,13 @@ async function getAll(req, res) {
 
 async function getBudgetById(req, res) {
   const { id } = req.params;
+  const userId = req.user._id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such budget" });
   }
 
-  const budget = await Budget.findById(id);
+  const budget = await Budget.findOne({ _id: id, userId });
 
   if (!budget) {
     return res.status(404).json({ error: "No such budget" });

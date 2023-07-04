@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Budget = require("./budget");
 
 const expenseSchema = mongoose.Schema(
   {
@@ -26,22 +25,22 @@ const expenseSchema = mongoose.Schema(
 );
 
 expenseSchema.pre("validate", async function () {
-  const budget = await Budget.findOne({
-    userId: this.userId,
-    _id: this.budgetId,
-  });
+  const Budget = require("./budget");
+  const budget = await Budget.findById(this.budgetId);
   if (!budget) {
     throw new Error("Budget does not exist");
   }
 });
 
 expenseSchema.post("save", async function (doc) {
+  const Budget = require("./budget");
   const budget = await Budget.findOne({ _id: doc.budgetId });
   budget.expenses.push(doc);
   await budget.save();
 });
 
 expenseSchema.post("findOneAndDelete", async function (doc) {
+  const Budget = require("./budget");
   const budget = await Budget.findOne({ _id: doc.budgetId });
   budget.expenses = budget.expenses.filter(
     (expense) => expense._id.toString() !== doc._id.toString()

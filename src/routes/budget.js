@@ -1,5 +1,11 @@
 const express = require("express");
-// const { signUp, logIn } = require("../controllers/userController");
+const {
+  getAll,
+  getBudgetById,
+  createBudget,
+  updateBudget,
+  deleteBudget,
+} = require("../controllers/budgetController");
 const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
@@ -8,28 +14,18 @@ const router = express.Router();
 router.use(requireAuth);
 
 //get all budgets
-router.get("/", (req, res) => {
-  res.json({ msg: "ALL Budgets" });
-});
+router.get("/", getAll);
 
 //get budget by id
-router.get("/:id", (req, res) => {
-  res.json({ msg: `Budgets ${req.params.id}` });
-});
+router.get("/:id", getBudgetById);
 
 //Create budget
-router.post("/create", (req, res) => {
-  res.json({ msg: `Create ` });
-});
+router.post("/create", createBudget);
 
 //Update budget
-router.patch("/:id", (req, res) => {
-  res.json({ msg: `Budgets ${req.params.id} updated` });
-});
+router.patch("/:id", updateBudget);
 
 //Delete budget
-router.delete("/:id", (req, res) => {
-  res.json({ msg: `Budgets ${req.params.id} deleted` });
-});
+router.delete("/:id", deleteBudget);
 
 module.exports = router;

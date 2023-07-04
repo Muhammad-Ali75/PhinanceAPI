@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const budgetSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
@@ -10,7 +10,7 @@ const budgetSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    userId: { type: mongoose.Schema.ObjectId, ref: "User" },
+    userId: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
     expenses: [{ type: mongoose.Schema.ObjectId, ref: "Expense" }],
   },
   { timestamps: true }

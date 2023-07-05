@@ -5,7 +5,9 @@ const Budget = require("../model/budget");
 async function getAll(req, res) {
   const userId = req.user._id;
 
-  const expenses = await Expense.find({ userId }).sort({ createdAt: -1 });
+  const expenses = await Expense.find({ userId })
+    .sort({ createdAt: -1 })
+    .populate("budgetId");
 
   res.json(expenses);
 }
@@ -14,9 +16,11 @@ async function getAllByBudget(req, res) {
   const userId = req.user._id;
   const { id } = req.params;
 
-  const expenses = await Expense.find({ userId, budgetId: id }).sort({
-    createdAt: -1,
-  });
+  const expenses = await Expense.find({ userId, budgetId: id })
+    .sort({
+      createdAt: -1,
+    })
+    .populate("budgetId");
 
   res.json(expenses);
 }

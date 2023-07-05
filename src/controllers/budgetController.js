@@ -4,7 +4,9 @@ const Budget = require("../model/budget");
 async function getAll(req, res) {
   const userId = req.user._id;
 
-  const budgets = await Budget.find({ userId }).sort({ createdAt: -1 });
+  const budgets = await Budget.find({ userId })
+    .sort({ createdAt: -1 })
+    .populate("expenses");
 
   res.json(budgets);
 }
@@ -17,7 +19,7 @@ async function getBudgetById(req, res) {
     return res.status(404).json({ error: "No such budget" });
   }
 
-  const budget = await Budget.findOne({ _id: id, userId });
+  const budget = await Budget.findOne({ _id: id, userId }).populate("expenses");
 
   if (!budget) {
     return res.status(404).json({ error: "No such budget" });

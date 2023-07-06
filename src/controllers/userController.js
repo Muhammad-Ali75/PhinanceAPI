@@ -18,7 +18,6 @@ async function signUp(req, res) {
   }
 }
 
-//Method to post Product to db
 async function logIn(req, res) {
   const { email, password } = req.body;
 

@@ -1,6 +1,5 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-const mongoString = process.env.DATABASE_URL;
+import 'dotenv/config'
+import {connect} from"mongoose"
 
 function dbConnect() {
   connectToDatabase()
@@ -14,9 +13,9 @@ function dbConnect() {
 }
 
 const connectToDatabase = () => {
-  return mongoose.connect(mongoString, {
+  return connect(process.env.DATABASE_URL, {
     autoIndex: true,
   });
 };
 
-module.exports = dbConnect;
+export default dbConnect;

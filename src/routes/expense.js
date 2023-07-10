@@ -1,13 +1,13 @@
-const express = require("express");
-const {
+import { Router } from "express";
+import {
   getAll,
   getAllByBudget,
   createExpense,
   deleteExpense,
-} = require("../controllers/expenseController");
-const requireAuth = require("../middleware/requireAuth");
+} from "../controllers/expenseController.js";
+import requireAuth from "../middleware/requireAuth.js";
 
-const router = express.Router();
+const router = Router();
 
 // require auth for all workout routes
 router.use(requireAuth);
@@ -24,4 +24,4 @@ router.post("/create", createExpense);
 //Delete an expense
 router.delete("/:id", deleteExpense);
 
-module.exports = router;
+export default router;

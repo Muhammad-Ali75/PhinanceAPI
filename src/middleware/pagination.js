@@ -1,4 +1,4 @@
-function paginatedResults(model) {
+export default function paginatedResults(model) {
   // middleware function
   return async (req, res, next) => {
     const page = parseInt(req.query.page);
@@ -39,5 +39,3 @@ function paginatedResults(model) {
     }
   };
 }
-
-module.exports = paginatedResults;

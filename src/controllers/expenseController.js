@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const Expense = require("../model/expense");
-const Budget = require("../model/budget");
+import { Types } from "mongoose";
+import Expense from "../model/expense.js";
 
 async function getAll(req, res) {
   const userId = req.user._id;
@@ -64,7 +63,7 @@ async function createExpense(req, res) {
 async function deleteExpense(req, res) {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such expense" });
   }
 
@@ -77,9 +76,4 @@ async function deleteExpense(req, res) {
   res.status(200).json(expense);
 }
 
-module.exports = {
-  getAll,
-  getAllByBudget,
-  createExpense,
-  deleteExpense,
-};
+export { getAll, getAllByBudget, createExpense, deleteExpense };

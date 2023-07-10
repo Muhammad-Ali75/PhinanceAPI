@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
+import Budget from "./budget.js";
 
-const expenseSchema = mongoose.Schema(
+const expenseSchema = Schema(
   {
     title: {
       type: String,
@@ -11,12 +12,12 @@ const expenseSchema = mongoose.Schema(
       required: true,
     },
     budgetId: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.ObjectId,
       ref: "Budget",
       required: true,
     },
     userId: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.ObjectId,
       ref: "User",
       required: true,
     },
@@ -25,7 +26,6 @@ const expenseSchema = mongoose.Schema(
 );
 
 expenseSchema.pre("validate", async function () {
-  const Budget = require("./budget");
   const budget = await Budget.findById(this.budgetId);
   if (!budget) {
     throw new Error("Budget does not exist");
@@ -33,14 +33,12 @@ expenseSchema.pre("validate", async function () {
 });
 
 expenseSchema.post("save", async function (doc) {
-  const Budget = require("./budget");
   const budget = await Budget.findOne({ _id: doc.budgetId });
   budget.expenses.push(doc);
   await budget.save();
 });
 
 expenseSchema.post("findOneAndDelete", async function (doc) {
-  const Budget = require("./budget");
   const budget = await Budget.findOne({ _id: doc.budgetId });
   budget.expenses = budget.expenses.filter(
     (expense) => expense._id.toString() !== doc._id.toString()
@@ -48,4 +46,4 @@ expenseSchema.post("findOneAndDelete", async function (doc) {
   await budget.save();
 });
 
-module.exports = mongoose.model("Expense", expenseSchema);
+export default model("Expense", expenseSchema);

@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Budget = require("../model/budget");
+import { Types } from "mongoose";
+import Budget from "../model/budget.js";
 
 async function getAll(req, res) {
   const userId = req.user._id;
@@ -15,7 +15,7 @@ async function getBudgetById(req, res) {
   const { id } = req.params;
   const userId = req.user._id;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such budget" });
   }
 
@@ -63,7 +63,7 @@ async function createBudget(req, res) {
 async function updateBudget(req, res) {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such budget" });
   }
 
@@ -84,7 +84,7 @@ async function updateBudget(req, res) {
 async function deleteBudget(req, res) {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such budget" });
   }
 
@@ -97,10 +97,4 @@ async function deleteBudget(req, res) {
   res.status(200).json(budget);
 }
 
-module.exports = {
-  getAll,
-  getBudgetById,
-  createBudget,
-  updateBudget,
-  deleteBudget,
-};
+export { getAll, getBudgetById, createBudget, updateBudget, deleteBudget };

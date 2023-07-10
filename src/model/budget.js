@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
+import Expense from "../model/expense.js";
 
-const budgetSchema = new mongoose.Schema(
+const budgetSchema = new Schema(
   {
     title: {
       type: String,
@@ -15,13 +16,13 @@ const budgetSchema = new mongoose.Schema(
       required: true,
     },
     userId: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.ObjectId,
       ref: "User",
       required: true,
     },
     expenses: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: "Expense",
       },
     ],
@@ -30,8 +31,7 @@ const budgetSchema = new mongoose.Schema(
 );
 
 budgetSchema.post("findOneAndDelete", async function (doc) {
-  const Expense = require("../model/expense");
   await Expense.deleteMany({ budgetId: doc._id.toString() });
 });
 
-module.exports = mongoose.model("Budget", budgetSchema);
+export default model("Budget", budgetSchema);

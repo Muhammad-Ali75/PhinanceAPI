@@ -32,7 +32,9 @@ const budgetSchema = new Schema(
 );
 
 budgetSchema.post("findOneAndDelete", async function (doc) {
-  await Expense.deleteMany({ budgetId: doc._id.toString() });
+  if (doc) {
+    await Expense.deleteMany({ budgetId: doc._id.toString() });
+  }
 });
 
 export default model("Budget", budgetSchema);

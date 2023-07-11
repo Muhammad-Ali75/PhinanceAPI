@@ -18,7 +18,9 @@ async function getBudgetById(req, res) {
   const userId = req.user._id;
 
   if (!Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, error: "No such budget" });
+    return res
+      .status(404)
+      .json({ success: false, error: "Invalid budget id." });
   }
 
   const budget = await Budget.findOne({ _id: id, userId }).populate("expenses");

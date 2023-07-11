@@ -49,9 +49,15 @@ async function createExpense(req, res) {
     emptyFields.push("expenseAmount");
   }
   if (!budgetId) {
-    return res.status(400).json({ error: "Budget ID is required" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Budget ID is required" });
   }
-
+  if (!Types.ObjectId.isValid(budgetId)) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Invalid budget id." });
+  }
   if (emptyFields.length > 0) {
     return res
       .status(400)

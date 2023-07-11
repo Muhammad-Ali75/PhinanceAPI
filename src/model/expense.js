@@ -34,18 +34,22 @@ expenseSchema.pre("validate", async function () {
 });
 
 expenseSchema.post("save", async function (doc) {
-  const budget = await Budget.findOne({ _id: doc.budgetId });
-  budget.expenses.push(doc);
-  await budget.save();
+  if (doc) {
+    const budget = await Budget.findOne({ _id: doc.budgetId });
+    budget.expenses.push(doc);
+    await budget.save();
+  }
 });
 
 expenseSchema.post("findOneAndDelete", async function (doc) {
-  const budget = await Budget.findOne({ _id: doc.budgetId });
-  budget.expenses = budget.expenses.filter(
-    (expense) => expense._id.toString() !== doc._id.toString()
-  );
+  if (doc) {
+    const budget = await Budget.findOne({ _id: doc.budgetId });
+    budget.expenses = budget.expenses.filter(
+      (expense) => expense._id.toString() !== doc._id.toString()
+    );
 
-  await budget.save();
+    await budget.save();
+  }
 });
 
 export default model("Expense", expenseSchema);

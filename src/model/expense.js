@@ -5,21 +5,22 @@ const expenseSchema = Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Expense title is required"],
+      minLength: [3, "Expense must be at least 3 characters long"],
     },
     expenseAmount: {
       type: Number,
-      required: true,
+      required: [true, "Expense amount is required"],
     },
     budgetId: {
       type: Schema.ObjectId,
       ref: "Budget",
-      required: true,
+      required: [true, "Budget Id is required"],
     },
     userId: {
       type: Schema.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, "UserId is required"],
     },
   },
   { timestamps: true }
@@ -43,6 +44,7 @@ expenseSchema.post("findOneAndDelete", async function (doc) {
   budget.expenses = budget.expenses.filter(
     (expense) => expense._id.toString() !== doc._id.toString()
   );
+
   await budget.save();
 });
 

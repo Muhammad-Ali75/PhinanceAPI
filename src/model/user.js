@@ -5,18 +5,20 @@ import validator from "validator";
 const userSchema = new Schema(
   {
     email: {
-      required: true,
+      required: [true, "Email is required"],
       type: String,
       unique: true,
       lowercase: true,
     },
     name: {
-      required: true,
+      required: [true, "Name is required"],
       type: String,
+      minLength: [3, "Name must be more than 3 characters long"],
     },
     password: {
-      required: true,
+      required: [true, "Password is required"],
       type: String,
+      minLength: [6, "Password must be at least 6 characters long"],
     },
   },
   { timestamps: true }
@@ -25,17 +27,17 @@ const userSchema = new Schema(
 userSchema.statics.login = async function (email, password) {
   //Validations
   if (!email || !password) {
-    throw Error("All fields must be filled");
+    throw Error("Email and Password must be provided.");
   }
 
   const user = await this.findOne({ email });
   if (!user) {
-    throw Error("Incorrect email");
+    throw Error("Incorrect email.");
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    throw Error("Incorrect password");
+    throw Error("Incorrect password.");
   }
 
   return user;
@@ -44,19 +46,22 @@ userSchema.statics.login = async function (email, password) {
 userSchema.statics.signup = async function (email, password, name) {
   //Validations
   if (!email || !password || !name) {
-    throw Error("All fields must be filled");
+    throw Error("Name, Email and Password must be provided.");
   }
   if (!validator.isEmail(email)) {
-    throw Error("Email not valid");
+    throw Error("Email not valid.");
   }
   if (!validator.isStrongPassword(password)) {
-    throw Error("Password not strong enough");
+    throw Error("Password not strong enough.");
+  }
+  if (name.length < 3) {
+    throw Error("Name must be at least 3 characters long.");
   }
 
   const exists = await this.findOne({ email });
 
   if (exists) {
-    throw Error("Email already in use");
+    throw Error("Email already in use.");
   }
 
   const salt = await bcrypt.genSalt(10);

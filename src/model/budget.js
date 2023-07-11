@@ -5,20 +5,21 @@ const budgetSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Budget title is required"],
+      minLength: [3, "Budget title must be at least 3 characters long."],
     },
     budgetedAmount: {
       type: Number,
-      required: true,
+      required: [true, "Budget amount is required"],
     },
     color: {
       type: String,
-      required: true,
+      required: [true, "Color is required"],
     },
     userId: {
       type: Schema.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, "User Id is required"],
     },
     expenses: [
       {

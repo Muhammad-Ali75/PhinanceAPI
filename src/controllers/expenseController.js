@@ -96,9 +96,7 @@ async function deleteExpense(req, res) {
       .json({ success: false, error: "No such expense exists." });
   }
 
-  res
-    .status(202)
-    .json({ success: true, message: "Expense deleted successfully." });
+  res.status(204);
 }
 
 export { getAll, getAllByBudget, createExpense, deleteExpense };

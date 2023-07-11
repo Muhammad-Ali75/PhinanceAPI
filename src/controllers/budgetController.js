@@ -82,7 +82,8 @@ async function updateBudget(req, res) {
     { _id: id },
     {
       ...req.body,
-    }
+    },
+    { new: true, runValidators: true }
   );
 
   if (!budget) {
@@ -91,9 +92,7 @@ async function updateBudget(req, res) {
       .json({ success: false, error: "No such budget exists." });
   }
 
-  res
-    .status(200)
-    .json({ success: true, message: "Budget updated successfully." });
+  res.status(200).json({ success: true, doc: budget });
 }
 
 async function deleteBudget(req, res) {
@@ -113,9 +112,7 @@ async function deleteBudget(req, res) {
       .json({ success: false, error: "No such budget exists." });
   }
 
-  res
-    .status(202)
-    .json({ success: true, message: "Budget deleted successfully." });
+  res.status(204);
 }
 
 export { getAll, getBudgetById, createBudget, updateBudget, deleteBudget };

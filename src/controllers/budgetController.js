@@ -7,8 +7,10 @@ async function getAll(req, res) {
   const budgets = await Budget.find({ userId })
     .sort({ createdAt: -1 })
     .populate("expenses");
-
-  res.json(budgets);
+  if (budgets.length === 0) {
+    return res.status(404).json({ success: false, error: "No budget found" });
+  }
+  res.json({ success: true, data: budgets });
 }
 
 async function getBudgetById(req, res) {
@@ -16,16 +18,16 @@ async function getBudgetById(req, res) {
   const userId = req.user._id;
 
   if (!Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such budget" });
+    return res.status(404).json({ success: false, error: "No such budget" });
   }
 
   const budget = await Budget.findOne({ _id: id, userId }).populate("expenses");
 
   if (!budget) {
-    return res.status(404).json({ error: "No such budget" });
+    return res.status(404).json({ success: false, error: "No such budget" });
   }
 
-  res.status(200).json(budget);
+  res.status(200).json({ success: true, data: budget });
 }
 
 async function createBudget(req, res) {
@@ -39,10 +41,15 @@ async function createBudget(req, res) {
   if (!budgetedAmount) {
     emptyFields.push("budgetedAmount");
   }
+  if (!color) {
+    emptyFields.push("color");
+  }
   if (emptyFields.length > 0) {
-    return res
-      .status(400)
-      .json({ error: "Please fill in all the fields", emptyFields });
+    return res.status(400).json({
+      success: false,
+      error: "Please fill in all the fields",
+      emptyFields,
+    });
   }
 
   // add doc to db
@@ -54,9 +61,9 @@ async function createBudget(req, res) {
       color,
       userId,
     });
-    res.status(200).json(budget);
+    res.status(201).json({ success: true, data: budget });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ success: false, error: error.message });
   }
 }
 
@@ -64,7 +71,9 @@ async function updateBudget(req, res) {
   const { id } = req.params;
 
   if (!Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such budget" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Invalid budget id." });
   }
 
   const budget = await Budget.findOneAndUpdate(
@@ -75,26 +84,36 @@ async function updateBudget(req, res) {
   );
 
   if (!budget) {
-    return res.status(400).json({ error: "No such budget" });
+    return res
+      .status(404)
+      .json({ success: false, error: "No such budget exists." });
   }
 
-  res.status(200).json(budget);
+  res
+    .status(200)
+    .json({ success: true, message: "Budget updated successfully." });
 }
 
 async function deleteBudget(req, res) {
   const { id } = req.params;
 
   if (!Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "No such budget" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Invalid budget id." });
   }
 
   const budget = await Budget.findOneAndDelete({ _id: id });
 
   if (!budget) {
-    return res.status(400).json({ error: "No such budget" });
+    return res
+      .status(404)
+      .json({ success: false, error: "No such budget exists." });
   }
 
-  res.status(200).json(budget);
+  res
+    .status(202)
+    .json({ success: true, message: "Budget deleted successfully." });
 }
 
 export { getAll, getBudgetById, createBudget, updateBudget, deleteBudget };

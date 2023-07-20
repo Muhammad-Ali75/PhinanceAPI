@@ -26,22 +26,24 @@ const expenseSchema = Schema(
   { timestamps: true }
 );
 
-expenseSchema.pre("validate", async function () {
+expenseSchema.pre("validate", async function (next) {
   const budget = await Budget.findById(this.budgetId);
   if (!budget) {
     throw new Error("Budget does not exist");
   }
+  next();
 });
 
-expenseSchema.post("save", async function (doc) {
+expenseSchema.post("save", async function (doc, next) {
   if (doc) {
     const budget = await Budget.findOne({ _id: doc.budgetId });
     budget.expenses.push(doc);
     await budget.save();
   }
+  next();
 });
 
-expenseSchema.post("findOneAndDelete", async function (doc) {
+expenseSchema.post("findOneAndDelete", async function (doc, next) {
   if (doc) {
     const budget = await Budget.findOne({ _id: doc.budgetId });
     budget.expenses = budget.expenses.filter(
@@ -50,6 +52,7 @@ expenseSchema.post("findOneAndDelete", async function (doc) {
 
     await budget.save();
   }
+  next();
 });
 
 export default model("Expense", expenseSchema);

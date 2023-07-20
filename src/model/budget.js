@@ -31,10 +31,11 @@ const budgetSchema = new Schema(
   { timestamps: true }
 );
 
-budgetSchema.post("findOneAndDelete", async function (doc) {
+budgetSchema.post("findOneAndDelete", async function (doc, next) {
   if (doc) {
     await Expense.deleteMany({ budgetId: doc._id.toString() });
   }
+  next();
 });
 
 export default model("Budget", budgetSchema);
